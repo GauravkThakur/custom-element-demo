@@ -1,7 +1,9 @@
-import { fileURLToPath, URL } from 'node:url'
+import { fileURLToPath, URL } from 'node:url';
 
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+
+import { version } from './package.json';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -19,5 +21,25 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  build: {
+    emptyOutDir: true,
+    manifest: true,
+    rollupOptions: {
+      output: [
+        {
+          format: 'umd',
+          entryFileNames: 'custom-app.umd.cjs',
+        },
+        {
+          format: 'es',
+          entryFileNames: 'custom-app.js',
+        }
+      ]
+    }
+  },
+  esbuild: {
+    legalComments: 'none',
+    footer: `//v1${version}`,
   }
 })
